@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Caso Clínico Integrativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Alfa Slab One', serif;
+            background-color: #f0f4f8; 
+            margin: 0; /* Asegura que no haya margen por defecto del body */
+            padding: 0; /* Asegura que no haya padding por defecto del body */
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .stat-card {
+            background-color: #004AAD;
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .flowchart-node {
+            border: 2px solid #0073E6;
+            background-color: #CCE5FF;
+            color: #004AAD;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .arrow {
+            color: #0073E6;
+            font-size: 2rem;
+            line-height: 1;
+            font-weight: 900;
+        }
+        /* --- ESTILOS MODIFICADOS PARA LA IMAGEN --- */
+        .iris-container {
+            position: relative;
+            /* **MODIFICADO:** Ancho y alto base para móviles. */
+            width: 100%; 
+            height: auto; /* La altura se ajusta automáticamente para mantener la proporción */
+            max-width: 750px; /* **MODIFICADO:** Tamaño máximo para el ancho (reducido de 700px) */
+            max-height: 600px; /* **MODIFICADO:** Tamaño máximo para la altura (reducido de 700px) */
+            margin: auto;
+            border-radius: 0; /* **MODIFICADO:** ¡Esto la hace cuadrada! */
+            overflow: hidden; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+            border: 3px solid #0073E6; 
+            display: flex; /* Para centrar la imagen dentro del contenedor */
+            justify-content: center;
+            align-items: center;
+        }
+        .iris-image {
+            width: 100%;
+            height: 97%;
+            object-fit: cover; 
+            border-radius: 0; /* **NUEVO/MODIFICADO:** Asegura que la imagen sea cuadrada internamente */
+        }
+        /* Media Query para pantallas más grandes (tablet y escritorio) */
+        @media (min-width: 768px) {
+            .iris-container {
+                width: 750px; /* **MODIFICADO:** Establece un ancho fijo de 500px para pantallas medianas y grandes */
+                height: 600px; /* **MODIFICADO:** Establece una altura fija de 500px para pantallas medianas y grandes */
+            }
+        }
+        /* Animation for the spinning arrow */
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 10s linear infinite;
+        }
+        /* --- FIN DE ESTILOS MODIFICADOS --- */
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <!-- 1. Portada / Título del caso -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#004AAD]">Análisis de Caso Clínico Integrativo</h1>
+            <p class="text-lg text-gray-600 mt-2">Un Estudio Holístico de la Salud</p>
+        </header>
+
+        <main class="space-y-12">
+
+            <!-- 2. Introducción general -->
+            <section id="introduction" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">Introducción: La Salud desde una Perspectiva Integral</h2>
+                <p class="text-center text-gray-600">Este informe profundiza en el análisis del caso de un paciente de 52 años, aplicando principios de iridología y nutrición funcional e integrativa. Nuestro objetivo es desentrañar los complejos desequilibrios subyacentes a sus síntomas y proponer un camino hacia la recuperación holística.</p>
+            </section>
+
+            <!-- 3. Motivo de consulta -->
+            <section id="motivo_consulta" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">Motivo de Consulta Principal</h2>
+                <p class="text-center text-gray-600 mb-6">El paciente presenta un conjunto de síntomas que impactan significativamente su calidad de vida y bienestar diario.</p>
+                <ul class="mt-2 text-gray-700 list-inside list-none space-y-1 text-center">
+                    <li><span class="text-[#FF8C42] mr-2">😴</span> Poca energía y fatiga crónica</li>
+                    <li><span class="text-[#FF8C42] mr-2">🤢</span> Pesadez después de comer</li>
+                    <li><span class="text-[#FF8C42] mr-2">⚖️</span> Aumento de peso (especialmente abdominal)</li>
+                    <li><span class="text-[#FF8C42] mr-2">🧠</span> Dificultad para concentrarse por las tardes</li>
+                    <li><span class="text-[#FF8C42] mr-2">😴</span> Despertar con la boca amarga</li>
+                    <li><span class="text-[#FF8C42] mr-2">🤕</span> Dolor en abdomen hipocondrio derecho</li>
+                </ul>
+            </section>
+
+            <!-- 4. Anamnesis e historia clínica -->
+            <section id="anamnesis" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">Anamnesis e Historia Clínica: Detalles del Paciente</h2>
+                <p class="text-center text-gray-600 mb-6">Un perfil completo que revela factores clave en el estado de salud actual del paciente.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="stat-card">
+                        <span class="text-4xl font-extrabold">52</span>
+                        <p class="font-semibold mt-1">Años</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="text-4xl font-extrabold">31.0</span>
+                        <p class="font-semibold mt-1">IMC (Obesidad Grado I)</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="text-4xl font-extrabold">112 cm</span>
+                        <p class="font-semibold mt-1">Cintura (Riesgo Elevado)</p>
+                    </div>
+                </div>
+                <!-- FIXED: Added the missing canvas for metricsChart -->
+                <div class="mt-6 mb-6">
+                    <h3 class="text-lg font-bold text-[#004AAD] text-center mb-4">Métricas Clave del Paciente vs. Rango Saludable</h3>
+                    <div class="chart-container" style="height:300px;">
+                        <canvas id="metricsChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+                    <div>
+                        <h3 class="font-bold text-lg text-[#004AAD] mb-2">Diagnósticos y Condiciones:</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Hipertensión arterial leve (en tratamiento con Enalapril)</li>
+                            <li>Colesterolemia elevada (en tratamiento natural con Lipitast)</li>
+                            <li>Episodios esporádicos de acidez estomacal (automedicación)</li>
+                            <li>Leve tinte amarillento en escleróticas (subictericia)</li>
+                            <li>Xantelasmas en párpados superiores</li>
+                            <li>Uñas frágiles y quebradizas</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-[#004AAD] mb-2">Hábitos de Vida:</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>Alimentación:</strong> "Apurada y de negocios", sigue una alimentación alta en grasas saturadas, azúcares refinados y productos ultraprocesados, con muy poca fibra y agua</li>
+                            <li><strong>Actividad Física</strong> : Sedentario</li>
+                            <li><strong>Tabaquismo</strong>: 10 cigarrillos/día por 20 años</li>
+                            <li><strong>Alcohol</strong>: 2-3 copas de vino tinto/cena fines de semana</li>
+                            <li><strong>Sueño</strong>: 5-6 horas con dificultad para conciliarlo</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="mt-6 text-center">
+                    <h3 class="font-bold text-lg text-[#004AAD]">Antecedentes Familiares:</h3>
+                    <ul class="mt-2 text-gray-700 list-inside list-none space-y-1">
+                        <li><strong>Padre con enfermedad coronaria</strong> (IAM a los 55 años)</li>
+                        <li><strong>Madre con diabetes tipo 2</strong></li>
+                    </ul>
+                </div>
+            
+
+            <!-- 6. Signo 2: Mancha de porfina / pigmentación marrón hepática -->
+            <section id="pigmentation_sign" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">Signo Iridológico Clave: Pigmentaciones Marrones (Manchas Tóxicas/Diaréticas)</h2>
+                
+                <div class="space-y-4 mb-6"> <!-- Texto ahora antes de la imagen -->
+                    <h3 class="text-lg font-semibold text-[#004AAD]">Observación en el Iris Derecho:</h3>
+                    <p class="text-gray-700 text-sm">Se observan múltiples pigmentaciones de color marrón oscuro a rojizo-marrón, de tamaño variable, dispersas en la zona ciliar del iris, pero con una concentración notable en las áreas correspondientes al hígado y la vesícula biliar (aproximadamente entre las 7 y las 8 horas) y también algunas en la zona intestinal más cercana a la pupila.</p>
+                    <h3 class="text-lg font-semibold text-[#004AAD]">Ubicación:</h3>
+                    <p class="text-gray-700 text-sm">Principalmente en la Zona Ciliar (órganos) y en zona circular 6, con énfasis en las 7 a 8 horas (hígado y vesícula biliar). También pueden verse en la Zona Pupilar (digestiva) en diferentes horas.</p>
+                </div>
+
+                <div class="flex justify-center items-center mb-8"> <!-- Contenedor de imagen con margen inferior consistente -->
+                    <div class="iris-container">
+                        <img src="https://i.postimg.cc/mgS9NXZR/Imagen1-LE-upscale-balanced-x4-light-ai-30.jpg" alt="Análisis de iris mejorado mediante IA" class="iris-image" onerror="this.alt='Imagen de un iris no disponible'">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-[#004AAD]">Justificación en función de los síntomas (Inferencia del Motivo de Consulta):</h3>
+                    <p class="text-gray-700 text-sm">El paciente presenta signos de disfunción hepática: pesadez digestiva, boca amarga, dolor hepático, subictericia y colesterol elevado, con antecedente de tabaquismo crónico. En iridología, las pigmentaciones marrones en la zona hepática indican sobrecarga tóxica y dificultad para eliminar desechos, lo que explica sus síntomas digestivos, fatiga y baja concentración.</p>
+                </div>
+            </section>
+            </section>
+
+            <!-- 5. Signo 1: Banda nerviosa autónoma contraída -->
+            <section id="bna_sign" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">Signo Iridológico Clave: Contracción de la Banda Nerviosa Autónoma (BNA)</h2>
+                
+                <div class="space-y-4 mb-6"> <!-- Texto ahora antes de la imagen -->
+                    <h3 class="text-lg font-semibold text-[#004AAD]">Observación en el Iris Derecho:</h3>
+                    <p class="text-gray-700 text-sm">La Banda Nerviosa Autónoma (BNA), que es el límite entre la zona pupilar (digestiva) y la zona ciliar (órganos y sistemas), se observa bastante definida y posiblemente más contraída o cercana a la pupila de lo que sería ideal, dando la impresión de un estrechamiento en esa zona.</p>
+                    <h3 class="text-lg font-semibold text-[#004AAD]">Ubicación:</h3>
+                    <p class="text-gray-700 text-sm">Esta es una zona circular que delimita el anillo digestivo central de la zona ciliar corresponde a las zonas 1 y 2 . Se observa alrededor de casi todas las horas del reloj, indicando una tensión generalizada.</p>
+                </div>
+
+                <div class="flex justify-center items-center mb-8"> <!-- Contenedor de imagen con margen inferior consistente -->
+                    <div class="iris-container">
+                        <img src="https://i.postimg.cc/mgS9NXZR/Imagen1-LE-upscale-balanced-x4-light-ai-30.jpg" alt="Análisis de iris mejorado mediante IA" class="iris-image" onerror="this.alt='Imagen de un iris no disponible'">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-[#004AAD]">Justificación en función de los síntomas (Inferencia del Motivo de Consulta):</h3>
+                    <p class="text-gray-700 text-sm">El paciente, gerente de finanzas con alta carga laboral, duerme poco, presenta fatiga, dificultad para concentrarse y acidez estomacal ocasional. Estos síntomas reflejan un estrés crónico y un desequilibrio del sistema nervioso autónomo, con predominio simpático. En iridología, la contracción de la Banda Nerviosa Autónoma (BNA) indica tensión nerviosa y estrés sostenido, lo que afecta la digestión, el metabolismo y los niveles de energía, contribuyendo a su malestar general.</p>
+                </div>
+            </section>
+
+            <!-- 7. Tipo de toxemia presente -->
+            <section id="toxemia_type" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">Tipo de Toxemia Presente: Hipofunción y Sobrecarga Orgánica</h2>
+                <p class="text-center text-gray-600 mb-6">La toxemia observada en el iris y en la sintomatología del paciente se asocia primariamente con una hipofunción y sobrecarga de órganos excretores y metabólicos, específicamente el hígado y el sistema digestivo (intestino).</p>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-[#004AAD]">Hígado (Hipofunción y Sobrecarga):</h3>
+                        <p class="text-gray-700 text-sm">
+                            <strong>Síntomas Clínicos</strong>: El paciente presenta pesadez postprandial, boca amarga al despertar, dolor en hipocondrio derecho, subictericia y colesterol elevado, con 20 años de tabaquismo. Estos signos son compatibles con disfunción hepática y sobrecarga de toxinas. En iridología, las pigmentaciones marrones en la zona hepática indican dificultad del hígado para eliminar toxinas y metabolizar grasas. Este cuadro explica la fatiga, la baja concentración y el riesgo cardiovascular elevado.
+estos hallazgos clínicos y iridológicos describen un perfil de disfunción hepática, sobrecarga tóxica y trastornos en el metabolismo de las grasas, con riesgo cardiovascular asociado.
+
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-[#004AAD]">Sistema Digestivo/Intestino (Hipofunción y Acumulación):</h3>
+                        <p class="text-gray-700 text-sm">
+                           <strong> Síntomas Clínicos</strong>: El paciente presenta aumento de peso abdominal, abdomen distendido y borborigmos frecuentes, con una dieta baja en fibra y escasa hidratación. Estos signos sugieren tránsito intestinal lento y posible disbiosis. La evacuación ineficiente favorece la reabsorción de toxinas, lo que podría explicar su pesadez postprandial y dificultad para concentrarse por autointoxicación y mala absorción de nutrientes.
+Una Banda Nerviosa Autónoma (BNA) contraída refleja tensión en el sistema nervioso autónomo, lo que puede afectar la digestión y generar espasmos en el tracto digestivo. Además, la presencia de lagunas o criptas en la zona intestinal del iris sugiere debilidad constitucional o acumulación de toxinas en el intestino, contribuyendo al proceso de autointoxicación.
+                        </p>
+                    </div>
+                </div>
+                <p class="text-center text-gray-700 mt-4">En resumen, la toxemia en este iris y en la sintomatología del paciente se asocia directamente a una hipofunción y sobrecarga crónica del hígado, que no logra metabolizar eficientemente las grasas y toxinas, y a una ralentización y disfunción del sistema digestivo, que impide una adecuada eliminación de desechos, llevando a una acumulación sistémica de productos de desecho metabólicos.</p>
+            </section>
+
+            <!-- 8. Cuatro signos iridológicos clave -->
+            <section id="four_iris_signs" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-6 text-center">Cuatro Signos Iridológicos Clave en el Iris Derecho</h2>
+                <div class="flex justify-center items-center mb-8">
+                    <div class="iris-container">
+                        <!-- MODIFICADO: Uso de la imagen proporcionada -->
+                        <img src="https://i.postimg.cc/mgS9NXZR/Imagen1-LE-upscale-balanced-x4-light-ai-30.jpg" alt="Análisis de iris mejorado mediante IA" class="iris-image" onerror="this.alt='Imagen de un iris no disponible'">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-[#004AAD] mb-2">1. Laguna Romboidal (Zona 4; Hora 8):</h3>
+                        <p class="text-gray-700 text-sm">Se observa una laguna de forma irregular (romboide) en la zona ciliar del iris derecho, aproximadamente a las 8 horas. Esta laguna en la región toracica,  puede indicar una debilidad inherente o un estrés funcional en el metabolismo del azúcar y de los lípidos, y en la capacidad de desintoxicación del hígado, agravado por el tabaquismo crónico.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#004AAD] mb-2">2. Rayos Solares Mayores (Zona 1, Hora 11-1h ):</h3>
+                        <p class="text-gray-700 text-sm">Fibras irídicas que parten de la pupila y se extienden hacia la periferia, marcadas en zonas como la superior (11-1 horas) pueden indicar irritación, inflamación o sobreactividad en el tracto gastrointestinal, contribuyendo a la pesadez, acidez y borborigmos del paciente.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#004AAD] mb-2">3. Anillo de Colesterol (Zona 7) :</h3>
+                        <p class="text-gray-700 text-sm">Visible como un anillo blanquecino y opaco que bordea la periferia del iris. Sugiere acumulación de lípidos y colesterol en los tejidos, reflejando posible arteriosclerosis incipiente o establecida. Se puede correlacionar con la colesterolemia elevada, hipertensión y riesgo cardiovascular.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#004AAD] mb-2">4. Cerco de Costras (Zona 7) :</h3>
+                        <p class="text-gray-700 text-sm">Banda oscura y densa, de apariencia escamosa, en el borde más externo del iris. Se interpreta como acumulación de toxinas en la piel y tejidos periféricos, indicando una eliminación deficiente a través de los órganos excretores. Relacionado con piel grasa y uñas frágiles.</p>
+                    </div>
+                </div>
+            </section>
+            <!-- 9. La Red de Desequilibrios Sistémicos -->
+            <section id="imbalances" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">La Red de Desequilibrios Sistémicos</h2>
+                <p class="text-center text-gray-600 mb-8">El estado del paciente es una compleja red de sistemas interconectados. La <strong>inflamación crónica de bajo grado</strong> es el núcleo que alimenta un círculo vicioso de disfunciones en todo el organismo.</p>
+                
+                <div class="mx-auto max-w-lg relative mt-8 flex items-center justify-center min-h-[350px] md:min-h-[400px]">
+                    <!-- Central Element -->
+                    <div class="absolute w-36 h-36 md:w-40 md:h-40 bg-[#FF8C42] text-white rounded-full flex items-center justify-center text-center p-4 z-10 shadow-xl border-4 border-white">
+                        <span class="font-bold text-sm md:text-base">Inflamación Crónica de Bajo Grado</span>
+                    </div>
+
+                    <!-- Spinning Arrow -->
+                    <div class="absolute w-60 h-60 md:w-72 md:h-72 z-0">
+                             <svg viewBox="0 0 100 100" class="animate-spin-slow fill-current text-[#0073E6] opacity-30">
+                                <path d="M 50,5 A 45,45 0 1 1 49.9,5.001 M 50,5 L 55,0 L 55,10 Z" />
+                            </svg>
+                    </div>
+
+                    <!-- Quadrants -->
+                    <div class="absolute top-0 left-0 w-full h-full">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 md:translate-y-0 w-44">
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm border border-blue-200">
+                                <h3 class="font-bold text-center text-sm text-[#004AAD]">🧠 Eje Intestino-Cerebro</h3>
+                                <p class="text-xs text-gray-700 mt-1 text-center">Disbiosis → Neuroinflamación y fatiga mental.</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-0 w-44">
+                            <div class="bg-blue-50 p-3 rounded-lg shadow-sm border border-blue-200">
+                                <h3 class="font-bold text-center text-sm text-[#004AAD]">⚡ Disfunción Mitocondrial</h3>
+                                <p class="text-xs text-gray-700 mt-1 text-center">Baja energía (ATP) → Fatiga crónica y poca resistencia.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-2 md:translate-y-0 w-44">
+                               <div class="bg-blue-50 p-3 rounded-lg shadow-sm border border-blue-200">
+                                <h3 class="font-bold text-center text-sm text-[#004AAD]">📉 Desbalance Hormonal</h3>
+                                <p class="text-xs text-gray-700 mt-1 text-center">Resistencia a la insulina → Grasa abdominal y antojos.</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:translate-x-0 w-44">
+                               <div class="bg-blue-50 p-3 rounded-lg shadow-sm border border-blue-200">
+                                <h3 class="font-bold text-center text-sm text-[#004AAD]">🤢 Sobrecarga Hepática</h3>
+                                <p class="text-xs text-gray-700 mt-1 text-center">Hígado graso → Mala detoxificación y toxinas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--10.Diagnóstico nutricional y funcional -->
+            <section id="nutritional_diagnosis" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-4 text-center">Diagnóstico Nutricional y Funcional Integral</h2>
+                <p class="text-center text-gray-600 mb-8">El paciente presenta un patrón complejo de desequilibrios interconectados que se retroalimentan, afectando múltiples sistemas corporales.</p>
+                
+                <h3 class="text-xl font-bold text-[#004AAD] mb-2">Desequilibrios Principales:</h3>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li><strong>Desregulación Metabólica</strong> : Posible resistencia a la Insulina impulsada por una dieta inadecuada y sedentarismo, llevando a obesidad central, dislipidemia e hipertensión.</li>
+                    <li><strong>Disfunción Hepato-Biliar y Congestión Digestiva</strong>: Sobrecarga hepática por dieta y toxinas (tabaco, alcohol), afectando la producción de bilis y la detoxificación.</li>
+                    <li><strong>Disbiosis Intestinal y Compromiso de Barrera</strong>: Dieta baja en fibra altera la microbiota, causando gases, distensión y posible "intestino permeable", que perpetúa la inflamación sistémica.</li>
+                    <li><strong>Estrés Crónico y Desregulación Neuroendocrina (Eje HPA)</strong>: Trabajo exigente, privación de sueño y hábitos tóxicos activan el eje del estrés, afectando energía, concentración y sueño.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-[#004AAD] mb-2">Nutrientes Afectados: Un Vacío de Esenciales</h3>
+                <p class="text-gray-700 mb-4">Dadas las condiciones y hábitos del paciente, es altamente probable que tenga deficiencias o requerimientos aumentados de varios nutrientes clave, fundamentales para su bienestar.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#004AAD] mb-2">Vitaminas del Grupo B:</h3>
+                        <p class="text-gray-700 mb-4 text-sm">Agotadas por carbohidratos refinados, alcohol, tabaquismo y estrés. Cruciales para energía, detoxificación y neurotransmisores.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#004AAD] mb-2">Magnesio:</h3>
+                        <p class="text-gray-700 mb-4 text-sm">Deficiente en dieta, agotado por estrés y tóxicos. Esencial para relajación, energía y metabolismo de glucosa.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#004AAD] mb-2">Ácidos Grasos Esenciales Omega-3:</h3>
+                        <p class="text-gray-700 mb-4 text-sm">Dieta deficiente en fuentes y alta en proinflamatorios. Potentes antiinflamatorios, cruciales para salud cardiovascular y cerebral.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#004AAD] mb-2">Vitamina D:</h3>
+                        <p class="text-gray-700 mb-4 text-sm">Baja exposición solar y posible mala absorción. Vital para inmunidad, inflamación y metabolismo.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#004AAD] mb-2">Antioxidantes:</h3>
+                        <p class="text-gray-700 mb-4 text-sm">Dieta baja en frutas/verduras; alta demanda por tabaquismo, alcohol e inflamación. Combaten el estrés oxidativo.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#004AAD] mb-2">Fibra Dietética:</h3>
+                        <p class="text-gray-700 mb-4 text-sm">Consumo muy bajo. Esencial para salud intestinal, regulación de glucemia y eliminación de toxinas.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#004AAD] mb-2">Colina e Inositol:</h3>
+                        <p class="text-gray-700 mb-4 text-sm">Déficit por dieta desequilibrada y disfunción hepática. Esenciales para la función hepática y metabolismo de grasas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11.Plan nutricional por fases -->
+            <section id="nutritional_plan" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-6 text-center">Plan Nutricional Integral por Fases</h2>
+                <p class="text-center text-gray-600 mb-8">El objetivo principal de esta fase de alimentación es bajar la inflamación, desintoxicar a nivel de organismo, mejorar la digestibilidad y asimilación de alimentos, y reparar el tejido digestivo. Poco a poco se incorporarán alimentos para complementar, según la reacción del tratamiento.</p>
+                
+                <h3 class="text-xl font-bold text-[#004AAD] mb-4 text-center">Fase Inicial: Desinflamación y Reparación</h3>
+                <p class="text-gray-700 mb-4 text-center">Dieta sin gluten, sin lactosa, sin caseína y baja en FODMAP.</p>
+
+                <h3 class="text-xl font-bold text-[#004AAD] mb-4 text-center">Transformación Nutricional: Antes y Después</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-center text-red-600 mb-4">Dieta "Antes"</h3>
+                        <div class="chart-container" style="height:250px;">
+                            <canvas id="beforeDietChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-center text-green-600 mb-4">Dieta Objetivo "Después"</h3>
+                        <div class="chart-container" style="height:250px;">
+                            <canvas id="afterDietChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-[#004AAD] mb-4 text-center">Cambios Nutricionales Clave:</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+                        <li><strong>Reduccion parcial</strong>: Azúcares refinados, edulcorantes artificiales, harinas refinadas (pan blanco, pizza), grasas trans, aceites vegetales refinados (fritos), lácteos enteros, quesos maduros y carnes rojas procesadas. Reducción drástica de alcohol y cafeína.</li>
+                        <li><strong>Hidratación Óptima</strong>: Agua tibia en ayunas, y 6-8 vasos de agua pura/tibia al día.</li>
+                        <li><strong>Prioridades Nutricionales</strong>: Aumento drástico del consumo de vegetales (mínimo 400g/día) y frutas de bajo índice glucémico. Priorizar proteína magra y de calidad (pescado, pollo, huevos). Incluir grasas saludables (aceite de oliva, palta, semillas).</li>
+                        <li><strong>Horarios de Comida</strong>: Establecer horarios regulares (Desayuno 10:00, Comida 14:00, Cena/Once 18:00-18:30). Cenar ligero y temprano.</li>
+                    </ul>
+                    <h3 class="text-xl font-bold text-[#004AAD] mb-4 text-center">Alimentos para Nutrir y Sanar:</h3>
+                    <p class="text-gray-700 mb-6">La selección de alimentos se centrará en apoyar la desintoxicación, reducir la inflamación, mejorar la sensibilidad a la insulina y restaurar la salud intestinal. Se priorizará la variedad y la calidad.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Vegetales Abundantes:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Hojas Verdes Oscuras (espinacas, kale, acelgas, rúcula)</li>
+                                <li>Crucíferas (brócoli, coliflor - floretes, repollo)</li>
+                                <li>Otros (zanahoria, zapallo italiano, pepino, pimentón, batata, yuca, papa)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Frutas de Bajo IG:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Bayas (arándanos, fresas, frambuesas)</li>
+                                <li>Manzanas y peras (con piel)</li>
+                                <li>Cítricos (limón, pomelo)</li>
+                            </ul>
+                            <h4 class="font-bold text-[#004AAD] mt-4 mb-2">Proteínas Magras y de Calidad:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Pescados grasos (salmón, sardinas) y blancos.</li>
+                                <li>Pechuga de pollo o pavo (orgánicas).</li>
+                                <li>Huevos (orgánicos).</li>
+                                <li>Legumbres (lentejas, garbanzos).</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Grasas Saludables:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Aceite de oliva virgen extra.</li>
+                                <li>Palta (aguacate).</li>
+                                <li>Frutos secos (almendras, nueces).</li>
+                                <li>Semillas (chía, lino, calabaza, sésamo).</li>
+                            </ul>
+                            <h4 class="font-bold text-[#004AAD] mt-4 mb-2">Otros Clave:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Quinoa, arroz integral.</li>
+                                <li>Caldo de huesos.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-[#004AAD] mb-4 mt-8 text-center">Nutrición para el Estrés: Alimentando la Resiliencia</h3>
+                    <p class="text-gray-700 mb-6 text-center">Las recomendaciones alimenticias para reducir el estrés se centran en estabilizar la glucosa en sangre, modular la inflamación y proporcionar nutrientes esenciales para el sistema nervioso y las glándulas suprarrenales.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Estabilización de la Glucosa en Sangre:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Evitar azúcares refinados y carbohidratos simples.</li>
+                                <li>Consumir comidas y snacks balanceados.</li>
+                                <li>Desayunos completos y nutritivos.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Aumento de Nutrientes Clave para el Estrés:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li><strong>Magnesio</strong>: (vegetales hoja verde, semillas, palta).</li>
+                                <li><strong>Vitaminas del Grupo B</strong>: (huevos, carnes magras, vegetales).</li>
+                                <li><strong>Omega-3</strong>: (pescados grasos, semillas de chía/lino).</li>
+                                <li><strong>Vitamina C</strong>: (cítricos, bayas, brócoli).</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Soporte de la Microbiota Intestinal:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Consumir alimentos ricos en fibra prebiótica.</li>
+                                <li>Consumo de alguna cepas de bacterias como <em>Lactobacillus plantarum, 
+                                    L. rhamnosus o Bifidobacterium longum</em>.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Hidratación Adecuada:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Mantenerse bien hidratado con agua pura.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Rituales de Alimentación Consciente:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Comer despacio, masticar bien, en ambiente tranquilo.</li>
+                                <li>Practicar respiración consciente antes de comer.</li>
+                                <li>Analizar el hambre emocional.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Restricción de Estimulantes y Depresores:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Reducir/eliminar cafeína, alcohol y tabaco.</li>
+                                <li>Cenar temprano para mejorar el sueño.</li>
+                            </ul>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-[#004AAD] mb-2">Fitoterapia:</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm">
+                                <li>Hepática: Cardo mariano, boldo, alcachofa.</li>
+                                <li>Nerviosa: Ashwagandha, melisa, passiflora.</li>
+                                <li>Digestiva: Hinojo, manzanilla.</li>
+                                <li>Aromaterapia: foco mental: Romero, menta;
+                                    equilibrio emocional: naranja dulce, lavanda en dosis suaves.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 12.Conclusión / próximos pasos -->
+            <section id="conclusion" class="card">
+                <h2 class="text-2xl font-bold text-[#0073E6] mb-6 text-center">Conclusión y Próximos Pasos: Un Camino Hacia el Bienestar</h2>
+                <p class="text-center text-gray-600 mb-8">Este plan integral aborda las raíces de los desequilibrios del paciente (inflamación, toxicidad, resistencia a la insulina, disbiosis y estrés crónico). Requiere compromiso y paciencia, pero ofrece el potencial de una mejora significativa.</p>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 text-center">
+                    <div class="p-4 rounded-lg bg-gray-50">
+                        <div class="text-4xl text-[#FF8C42]">🥦</div>
+                        <h3 class="font-bold mt-2 text-[#004AAD]">Dietoterapia</h3>
+                        <p class="text-sm text-gray-600 mt-1">Alimentación sin gluten, sin lácteos, baja en FODMAP para desinflamar y reparar.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-50">
+                        <div class="text-4xl text-[#FF8C42]">🌿</div>
+                        <h3 class="font-bold mt-2 text-[#004AAD]">Fitoterapia</h3>
+                        <p class="text-sm text-gray-600 mt-1">Uso de plantas medicinales para soporte hepático y nervioso.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-50">
+                        <div class="text-4xl text-[#FF8C42]">🏋️</div>
+                        <h3 class="font-bold mt-2 text-[#004AAD]">Ejercicio Físico</h3>
+                        <p class="text-sm text-gray-600 mt-1">Actividad física regular para mejorar metabolismo y energía.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-50">
+                        <div class="text-4xl text-[#FF8C42]">🧘</div>
+                        <h3 class="font-bold mt-2 text-[#004AAD]">Manejo del Estrés</h3>
+                        <p class="text-sm text-gray-600 mt-1">Técnicas de relajación y mejora del sueño para equilibrio mental.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-50">
+                        <div class="text-4xl text-[#FF8C42]">🏞️</div>
+                        <h3 class="font-bold mt-2 text-[#004AAD]">Agentes de la natureleza</h3>
+                        <p class="text-sm text-gray-600 mt-1">Reconexion con los A.G, practicas como grounding.</p>
+                    </div>
+                </div>
+                <p class="text-center text-gray-700 mt-8 text-sm">La colaboración interdisciplinaria y el empoderamiento del paciente son las claves del éxito en este proceso de sanación, buscando recuperar significativamente su energía, mejorar su salud digestiva y metabólica, reducir riesgos cardiovasculares y elevar su calidad de vida y bienestar general.</p>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            
+        </footer>
+
+    </div>
+
+    <script>
+        // Moved script to the end of the body for better DOM loading
+        const tooltipConfig = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const vibrantPalette = ['#0073E6', '#66B2FF', '#FF8C42', '#FFC300'];
+
+        const metricsChartCtx = document.getElementById('metricsChart').getContext('2d');
+        const metricsChart = new Chart(metricsChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['IMC (kg/m²)', ['Circunferencia Cintura', '(cm)'], ['Presión Sistólica', '(mmHg)'], ['Presión Diastólica', '(mmHg)']],
+                datasets: [{
+                    label: 'Paciente',
+                    data: [31.0, 112, 138, 88],
+                    backgroundColor: '#FF8C42',
+                    borderColor: '#E57E3B',
+                    borderWidth: 1
+                }, {
+                    label: 'Rango Saludable (Máx)',
+                    data: [24.9, 94, 120, 80],
+                    backgroundColor: '#0073E6',
+                    borderColor: '#005CB8',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: tooltipConfig.plugins,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#374151'
+                        }
+                    },
+                    x: {
+                       ticks: {
+                            color: '#374151',
+                             font: {
+                                size: 10
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const beforeDietCtx = document.getElementById('beforeDietChart').getContext('2d');
+        const beforeDietChart = new Chart(beforeDietCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Procesados & Azúcares', 'Grasas Saturadas', 'Harinas Refinadas', 'Bajo en Fibra'],
+                datasets: [{
+                    data: [45, 30, 20, 5],
+                    backgroundColor: ['#d9534f', '#f0ad4e', '#5bc0de', '#5cb85c'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { ...tooltipConfig.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                           font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+        
+        const afterDietCtx = document.getElementById('afterDietChart').getContext('2d');
+        const afterDietChart = new Chart(afterDietCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Vegetales & Fibra', 'Proteína Magra', 'Grasas Saludables', 'Carbs Complejos'],
+                datasets: [{
+                    data: [40, 25, 25, 10],
+                    backgroundColor: ['#5cb85c', '#5bc0de', '#f0ad4e', '#6a4c93'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { ...tooltipConfig.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                           font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
